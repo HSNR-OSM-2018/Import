@@ -8,5 +8,11 @@
     <artifactId>osm-import</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    
+    <dependencies>
+    <dependency>
+        <groupId>org.openstreetmap.osmosis</groupId>
+        <artifactId>osmosis-pbf</artifactId>
+        <version>0.45</version>
+    </dependency>
+    </dependencies>
 </project>
