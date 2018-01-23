@@ -22,6 +22,7 @@ import crosby.binary.osmosis.OsmosisReader;
 public class Importer implements Sink {
 
     private Importer(String path){
+        OsmFilter(path);
     }
 
     private String OsmFilter(String file) {
