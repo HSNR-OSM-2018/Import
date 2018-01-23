@@ -53,9 +53,10 @@ public class Importer implements Sink {
                 String paraNode = " --drop-ways --drop-tags=\"*=\" > ";
                 String paraWay = " --drop-nodes > ";
 
-                String s = ExecuteCommand("osmfilter " + origin + para + output.getAbsolutePath());
+                String s = ExecuteCommand("osmfilter " + origin + para + targetNode);
                 System.out.println("All-Filter done: " + s);
 
+                /*
                 //Get Nodes in File
                 File output2 = File.createTempFile("outputNode",".osm");
                 s = ExecuteCommand("osmfilter " + output.getAbsolutePath() + paraNode + output2.getAbsolutePath());
@@ -68,8 +69,10 @@ public class Importer implements Sink {
                 s = ExecuteCommand("osmfilter " + output.getAbsolutePath() + paraWay + output2.getAbsolutePath());
                 System.out.println("Way-Filter done: " + s);
                 s = ExecuteCommand("osmconvert " + output2.getAbsolutePath() + " -o=" + targetWay);
-                System.out.println("Node convert in .pbf done: " + s);
+                System.out.println("Way convert in .pbf done: " + s);
                 return targetNode;
+                */
+                return "";
             } else {
                 System.out.println(file + " has the wrong File-Type, need pbf/osm/o5m");
             }
