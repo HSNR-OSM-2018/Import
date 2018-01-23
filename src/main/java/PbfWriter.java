@@ -12,9 +12,7 @@ import org.openstreetmap.osmosis.core.domain.v0_6.CommonEntityData;
 import org.openstreetmap.osmosis.core.domain.v0_6.OsmUser;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.core.task.v0_6.Source;
-import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
-import crosby.binary.osmosis.OsmosisSerializer;
 
 public class PbfWriter implements Source{
 
