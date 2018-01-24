@@ -17,6 +17,8 @@ public class PbfWriter implements Source{
 
     private Sink _sink;
 
+    public void PbfWriter(){}
+
     public void setSink(Sink sink) {
         _sink = sink;
     }
@@ -24,7 +26,8 @@ public class PbfWriter implements Source{
     public void writeNodes(Map<Long,NodeInfo> nodes){
         for (Map.Entry<Long, NodeInfo> entry : nodes.entrySet())
         {
-            writeNode(entry.getKey(),entry.getValue().Lat(),entry.getValue().Lon());
+            if(entry.getValue().isMarked())
+                writeNode(entry.getKey(),entry.getValue().Lat(),entry.getValue().Lon());
         }
     }
 
@@ -44,10 +47,10 @@ public class PbfWriter implements Source{
     }
 
     private CommonEntityData createEntity(Long idx){
-        return new CommonEntityData(idx,1,new Date(),new OsmUser(0,"U"),idx);
+        return new CommonEntityData(idx,1,new Date(),new OsmUser(0,"U"),0);
     }
 
     private CommonEntityData createEntity(Long idx, Collection<Tag> tags){
-        return new CommonEntityData(idx,1,new Date(), new OsmUser(0,"U"),idx,tags);
+        return new CommonEntityData(idx,1,new Date(), new OsmUser(0,"U"),0,tags);
     }
 }

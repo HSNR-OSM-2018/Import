@@ -24,6 +24,7 @@ public class WayReader implements Sink{
     public WayReader(Map<Long,NodeInfo> nodes, String targetPath) throws FileNotFoundException {
         _nodeMap = nodes;
         _targetPath = targetPath;
+        _writer = new PbfWriter();
         OutputStream outputStream = new FileOutputStream(_targetPath);
         _writer.setSink(new OsmosisSerializer(new BlockOutputStream(outputStream)));
     }
@@ -90,7 +91,7 @@ public class WayReader implements Sink{
     private short tagToSpeed(String tagString){
         short speed;
         String tag = tagString.replace(" ","").toLowerCase();
-        speed = Short.parseShort(tag);
+        speed = saveParseString(tag);
         if(speed == 0) {
             if (tagString.equalsIgnoreCase("walk")) {
                 speed = 8;

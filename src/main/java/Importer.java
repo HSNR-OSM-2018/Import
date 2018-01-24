@@ -28,9 +28,10 @@ public class Importer{
         originNodes = pathNodes;
         originWays = pathWays;
         File file = new File(pathNodes);
-        targetNodes = file.getParent() + "Filter_" + file.getName();
+        targetNodes = file.getParent() + "\\Filter_" + file.getName();
+        System.out.println(targetNodes);
         file = new File(pathWays);
-        targetWays = file.getParent() + "Filter_" + file.getName();
+        targetWays = file.getParent() + "\\Filter_" + file.getName();
         filter();
     }
 
@@ -63,6 +64,8 @@ public class Importer{
             writer.complete();
 
             WayReader wayReader = new WayReader(nodeMarker.getNodesMap(), targetWays);
+            inputStream = new FileInputStream(originWays);
+            reader = new OsmosisReader(inputStream);
             reader.setSink(wayReader);
             reader.run();
         } catch (FileNotFoundException ex){
@@ -151,6 +154,6 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        new Importer("testNode.pbf","testWay.pbf");
+        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Node.pbf","C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Way.pbf");
     }
 }
