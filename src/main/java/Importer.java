@@ -33,6 +33,8 @@ public class Importer{
         file = new File(pathWays);
         targetWays = file.getParent() + "\\Filter_" + file.getName();
         filter();
+        stats(targetNodes);
+        stats(targetWays);
     }
 
     private Importer(String pathNodes, String pathWays, String targetPathNodes , String targetPathWays ){
@@ -68,6 +70,20 @@ public class Importer{
             reader = new OsmosisReader(inputStream);
             reader.setSink(wayReader);
             reader.run();
+        } catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void stats(String path){
+        try{
+            InputStream inputStream = new FileInputStream(path);
+            OsmosisReader reader = new OsmosisReader(inputStream);
+            System.out.println("---------------");
+            System.out.println(path);
+            reader.setSink(new CollectStats());
+            reader.run();
+            System.out.println("---------------");
         } catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
@@ -154,6 +170,6 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Node.pbf","C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Way.pbf");
+        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Node.pbf","C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf");
     }
 }
