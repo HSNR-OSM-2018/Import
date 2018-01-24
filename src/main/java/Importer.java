@@ -1,28 +1,73 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.Map;
-
-import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
-import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
-import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
-import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.Way;
-import org.openstreetmap.osmosis.core.task.v0_6.Sink;
-
 import crosby.binary.osmosis.OsmosisReader;
+import crosby.binary.osmosis.OsmosisSerializer;
+import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
+import java.io.*;
 
-public class Importer implements Sink {
+/*
+read node - save all nodes | map<id,(lat,lon,bool)>
 
-    private Importer(String path){
-        OsmFilter(path);
+read way - start and end node marked
+
+write node - write saved nodes
+
+read way - check middle node if in list && write way (correct tags && calc dist)
+-> split way there
+tags: highway=same maxspeed=km/h length=meter onway=yes/no/-1
+
+ */
+
+public class Importer{
+
+    private String originNodes;
+    private String originWays;
+    private String targetNodes;
+    private String targetWays;
+
+    private Importer(String pathNodes, String pathWays){
+        originNodes = pathNodes;
+        originWays = pathWays;
+        File file = new File(pathNodes);
+        targetNodes = file.getParent() + "Filter_" + file.getName();
+        file = new File(pathWays);
+        targetWays = file.getParent() + "Filter_" + file.getName();
+        filter();
+    }
+
+    private Importer(String pathNodes, String pathWays, String targetPathNodes , String targetPathWays ){
+        originNodes = pathNodes;
+        originWays = pathWays;
+        targetNodes = targetPathNodes;
+        targetWays = targetPathWays;
+        filter();
+    }
+
+    private void filter() {
+        try {
+            NodeMarker nodeMarker = new NodeMarker();
+            PbfWriter writer = new PbfWriter();
+
+            InputStream inputStream = new FileInputStream(originNodes);
+            OsmosisReader reader = new OsmosisReader(inputStream);
+            reader.setSink(nodeMarker);
+            reader.run();
+
+            inputStream = new FileInputStream(originWays);
+            reader = new OsmosisReader(inputStream);
+            reader.setSink(nodeMarker);
+            reader.run();
+
+            OutputStream outputStream = new FileOutputStream(targetNodes);
+            writer.setSink(new OsmosisSerializer(new BlockOutputStream(outputStream)));
+            writer.writeNodes(nodeMarker.getNodesMap());
+            writer.complete();
+
+            WayReader wayReader = new WayReader(nodeMarker.getNodesMap(), targetWays);
+            reader.setSink(wayReader);
+            reader.run();
+        } catch (FileNotFoundException ex){
+            ex.printStackTrace();
+        }
     }
 
     private String OsmFilter(String file) {
@@ -49,7 +94,7 @@ public class Importer implements Sink {
             //Filtern und nach pbf umwandeln
             File output = File.createTempFile("output", ".osm");
             if (origin.endsWith(".osm") || origin.endsWith(".o5m")) {
-                String para = " --drop-relations --drop-author --drop-version --keep=\"highway=motorway =motorway_link =trunk =trunk_link =primary =primary_link =secondary =secondary_link =tertiary =tertiary_link =living_street =residential =unclassified =service\" > ";
+                String para = " --drop-relations --drop-author --drop-version --keep=\"highway=motorway =motorway_link =trunk =trunk_link =primary =primary_link =secondary =secondary_link =tertiary =tertiary_link =living_street =residential =unclassified =service =road\" > ";
                 String paraNode = " --drop-ways --drop-tags=\"*=\" > ";
                 String paraWay = " --drop-nodes > ";
 
@@ -105,41 +150,7 @@ public class Importer implements Sink {
         return output.toString();
     }
 
-    private void Filter(){}
-
-    private double CalcLength(double latA, double lonA, double latB, double lonB){
-        double lat = latA - latB;
-        double lon = lonA - lonB;
-        double dist = Math.sqrt(Math.pow(lat,2) + Math.pow(lon,2));
-        return dist;
-    }
-
-    //----------Sink-Class------------------------------------------
-
-    public void process(EntityContainer entityContainer) {
-        if(entityContainer instanceof NodeContainer){
-
-        } else if(entityContainer instanceof  WayContainer){
-
-        } else if(entityContainer instanceof  RelationContainer){
-
-        } else {
-            System.out.println("Unkown Entity");
-        }
-    }
-
-    public void initialize(Map<String, Object> map) {
-    }
-
-    public void complete() {
-    }
-
-    public void release() {
-    }
-
-    //-------------------------------------------------------
-
     public static void main(String[] args) {
-        new Importer("test.pbf");
+        new Importer("testNode.pbf","testWay.pbf");
     }
 }
