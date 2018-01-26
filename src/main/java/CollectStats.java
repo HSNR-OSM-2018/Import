@@ -18,6 +18,8 @@ public class CollectStats implements Sink{
     private int speedC = 0;
     private int highwayC = 0;
     private int lengthC = 0;
+    private int length = 0;
+    private int lparseError = 0;
     private int oneC = 0;
     private int relationC = 0;
     private int unknownC = 0;
@@ -41,6 +43,12 @@ public class CollectStats implements Sink{
                         break;
                     case "length":
                         lengthC++;
+                        try {
+                            length += Integer.parseInt(tag.getValue());
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                            lparseError++;
+                        }
                         break;
                     case "highway":
                         highwayC++;
@@ -81,6 +89,8 @@ public class CollectStats implements Sink{
         if(speedC>1)System.out.println("Maxspeed: " + speedC);
         if(oneC>1)System.out.println("Oneway: " + oneC);
         if(lengthC>1)System.out.println("Length: " + lengthC);
+        if(length>1)System.out.println("Length in Meter: " + length);
+        if(lparseError>1)System.out.println("Length parse Error: " + lparseError);
     }
 
     public void release() {

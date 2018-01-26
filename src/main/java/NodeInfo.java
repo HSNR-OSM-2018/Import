@@ -27,10 +27,10 @@ public class NodeInfo {
     }
 
     public int distToNode(NodeInfo node){
-        int dist = 0;
-        double lat = this._lat - node.Lat();
-        double lon = this._lon - node.Lon();
-        dist = (int)Math.sqrt(Math.pow(lat,2) + Math.pow(lon,2));
-        return dist;
+        double dist = 0;
+        double lat = 111.3*(this._lat - node.Lat());
+        double lon = 71.5*(this._lon - node.Lon());
+        dist = Math.sqrt(lat*lat+lon*lon);
+        return (int)(dist*1000);
     }
 }

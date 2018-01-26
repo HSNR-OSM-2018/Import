@@ -170,6 +170,7 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Node.pbf","C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf");
+        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Node.pbf",
+                "C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf");
     }
 }
