@@ -33,8 +33,8 @@ public class Importer{
         file = new File(pathWays);
         targetWays = file.getParent() + "\\Filter_" + file.getName();
         filter();
-        stats(targetNodes);
-        stats(targetWays);
+        analyseFile(targetNodes,0);
+        analyseFile(targetWays,0);
     }
 
     private Importer(String pathNodes, String pathWays, String targetPathNodes , String targetPathWays ){
@@ -42,7 +42,9 @@ public class Importer{
         originWays = pathWays;
         targetNodes = targetPathNodes;
         targetWays = targetPathWays;
-        filter();
+        //filter();
+        analyseFile(this.getClass().getResource("/duesseldorf2701.pbf").getPath(), 268326223);
+        analyseFile(this.getClass().getResource("/duesseldorf2701/step1.pbf").getPath(), 268326223);
     }
 
     private void filter() {
@@ -75,77 +77,18 @@ public class Importer{
         }
     }
 
-    private void stats(String path){
+    private void analyseFile(String path, long searchNumber){
         try{
             InputStream inputStream = new FileInputStream(path);
             OsmosisReader reader = new OsmosisReader(inputStream);
             System.out.println("---------------");
             System.out.println(path);
-            reader.setSink(new CollectStats());
+            reader.setSink(new Analyzer(searchNumber));
             reader.run();
             System.out.println("---------------");
         } catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
-    }
-
-    private String OsmFilter(String file) {
-        try {
-            //prüfen ob datei vorhanden ist
-            File f = new File(file);
-            if (!f.isFile()) {
-                System.out.println(file + " is not a file");
-                return "Error";
-            }
-
-            String origin = file;
-            String targetNode = f.getParent() + "/Node_" + f.getName();
-            String targetWay = f.getParent() + "/Way_" + f.getName();
-
-            //umwandeln falls im falschen format
-            if (origin.endsWith(".pbf")) {
-                f = File.createTempFile("tmp.osm", ".o5m");
-                String s = ExecuteCommand("osmconvert " + origin + " -o=" + f.getAbsolutePath());
-                System.out.println("Convert done to .o5m: " + s);
-                origin = f.getAbsolutePath();
-            }
-
-            //Filtern und nach pbf umwandeln
-            File output = File.createTempFile("output", ".osm");
-            if (origin.endsWith(".osm") || origin.endsWith(".o5m")) {
-                String para = " --drop-relations --drop-author --drop-version --keep=\"highway=motorway =motorway_link =trunk =trunk_link =primary =primary_link =secondary =secondary_link =tertiary =tertiary_link =living_street =residential =unclassified =service =road\" > ";
-                String paraNode = " --drop-ways --drop-tags=\"*=\" > ";
-                String paraWay = " --drop-nodes > ";
-
-                String s = ExecuteCommand("osmfilter " + origin + para + targetNode);
-                System.out.println("All-Filter done: " + s);
-
-                /*
-                //Get Nodes in File
-                File output2 = File.createTempFile("outputNode",".osm");
-                s = ExecuteCommand("osmfilter " + output.getAbsolutePath() + paraNode + output2.getAbsolutePath());
-                System.out.println("Node-Filter done: " + s);
-                s = ExecuteCommand("osmconvert " + output2.getAbsolutePath() + " -o=" + targetNode);
-                System.out.println("Node convert in .pbf done: " + s);
-
-                //Get Ways in File
-                output2 = File.createTempFile("outputWay",".osm");
-                s = ExecuteCommand("osmfilter " + output.getAbsolutePath() + paraWay + output2.getAbsolutePath());
-                System.out.println("Way-Filter done: " + s);
-                s = ExecuteCommand("osmconvert " + output2.getAbsolutePath() + " -o=" + targetWay);
-                System.out.println("Way convert in .pbf done: " + s);
-                return targetNode;
-                */
-                return "";
-            } else {
-                System.out.println(file + " has the wrong File-Type, need pbf/osm/o5m");
-            }
-
-        }catch (Exception ex){
-            System.out.println("Exception in OsmFilter:");
-            ex.printStackTrace();
-        }
-        return "Error";
     }
 
     private String ExecuteCommand(String command){
@@ -169,8 +112,16 @@ public class Importer{
         return output.toString();
     }
 
+    public void Import(){
+        String path = this.getClass().getResource("/duesseldorf2701.pbf").getPath();
+        String target = path.replace(".pbf","");
+        String rfScript = this.getClass().getResource("/roughFilter.sh").getPath();
+        ExecuteCommand(rfScript + " " + path + " " + target);
+        //TODO check for linux system then execute script else execute only the written filter
+    }
+
     public static void main(String[] args) {
         new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Node.pbf",
-                "C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf");
+                "C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf", "","");
     }
 }

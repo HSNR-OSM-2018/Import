@@ -2,14 +2,12 @@ import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.NodeContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.RelationContainer;
 import org.openstreetmap.osmosis.core.container.v0_6.WayContainer;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
-import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
-import org.openstreetmap.osmosis.core.domain.v0_6.Way;
+import org.openstreetmap.osmosis.core.domain.v0_6.*;
 import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 
 import java.util.Map;
 
-public class CollectStats implements Sink{
+public class Analyzer implements Sink{
 
     private int nodeC = 0;
     private int nTagC = 0;
@@ -24,6 +22,12 @@ public class CollectStats implements Sink{
     private int relationC = 0;
     private int unknownC = 0;
 
+    private long search;
+
+    public Analyzer(long searchNumber){
+        search = searchNumber;
+    }
+
     public void process(EntityContainer entityContainer) {
         if(entityContainer instanceof NodeContainer){
 
@@ -31,12 +35,19 @@ public class CollectStats implements Sink{
             nodeC++;
             nTagC += node.getTags().size();
 
+            if(node.getId() == search){
+                System.out.println("-------------------------");
+                System.out.println("Node: " + node.getId());
+                System.out.println("_________________________");
+            }
         } else if(entityContainer instanceof WayContainer){
-
+            boolean found = false;
             Way way = ((WayContainer) entityContainer).getEntity();
             wayC++;
             for(Tag tag : way.getTags()){
                 wTagC++;
+                if(tag.getValue().equals(String.valueOf(search)))
+                    found = true;
                 switch (tag.getKey()){
                     case "maxspeed":
                         speedC++;
@@ -46,7 +57,7 @@ public class CollectStats implements Sink{
                         try {
                             length += Integer.parseInt(tag.getValue());
                         } catch (Exception ex){
-                            ex.printStackTrace();
+                            //ex.printStackTrace();
                             lparseError++;
                         }
                         break;
@@ -58,14 +69,40 @@ public class CollectStats implements Sink{
                 }
             }
 
+            for (WayNode node : way.getWayNodes()) {
+                if(node.getNodeId() == search)
+                    found = true;
+            }
+
+            if(found){
+                System.out.println("-------------------------");
+                System.out.println("Way: " + way.getId());
+                for (WayNode node : way.getWayNodes()) {
+                    System.out.println("Node: " + node.getNodeId());
+                }
+                for (Tag tag : way.getTags()) {
+                    System.out.println(tag.getKey() + " : " + tag.getValue());
+                }
+                System.out.println("_________________________");
+            }
         } else if(entityContainer instanceof RelationContainer){
-
             relationC++;
-            //Not needed
+            Relation rel = ((RelationContainer) entityContainer).getEntity();
+            boolean found = (rel.getId() == search);
+            for (Tag tag : rel.getTags()) {
+                if(tag.getValue().equals(String.valueOf(search)))
+                    found = true;
+            }
+            if(found){
+                System.out.println("-------------------------");
+                System.out.println("Relation: " + rel.getId());
+                for (Tag tag : rel.getTags()) {
+                    System.out.println(tag.getKey() + " " + tag.getValue());
+                }
+                System.out.println("_________________________");
+            }
         } else {
-
             unknownC++;
-
         }
     }
 
