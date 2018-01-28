@@ -43,8 +43,8 @@ public class Importer{
         targetNodes = targetPathNodes;
         targetWays = targetPathWays;
         //filter();
-        analyseFile(this.getClass().getResource("/duesseldorf2701.pbf").getPath(), 268326223);
-        analyseFile(this.getClass().getResource("/duesseldorf2701/step1.pbf").getPath(), 268326223);
+        analyseFile(this.getClass().getResource("/duesseldorf2701.pbf").getPath(), 366343169);
+        analyseFile(this.getClass().getResource("/duesseldorf2701/step1.pbf").getPath(), 366343169);
     }
 
     private void filter() {
