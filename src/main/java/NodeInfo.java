@@ -29,6 +29,6 @@ public class NodeInfo {
     }
 
     public int distToNode(NodeInfo node){
-        return (int)Node.getDistance(this._lat, this._lon, node._lat, node._lon);
+        return (int) Node.getDistance(this._lat, this._lon, node._lat, node._lon);
     }
 }
