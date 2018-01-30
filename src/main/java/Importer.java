@@ -109,12 +109,11 @@ public class Importer{
         return output.toString();
     }
 
-    public void Import(){
-        String path = this.getClass().getResource("/duesseldorf2701.pbf").getPath();
-        String target = path.replace(".pbf","");
+    public void linux(String path){
+        String origin = path;
+        String target = origin.replace(".pbf","");
         String rfScript = this.getClass().getResource("/roughFilter.sh").getPath();
         ExecuteCommand(rfScript + " " + path + " " + target);
-        //TODO check for linux system then execute script else execute only the written filter
     }
 
     public static void main(String[] args) {
