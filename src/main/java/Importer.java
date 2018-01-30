@@ -3,6 +3,7 @@ import crosby.binary.osmosis.OsmosisSerializer;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
 import java.io.*;
+import java.security.Timestamp;
 
 /*
 read node - save all nodes | map<id,(lat,lon,bool)>
@@ -24,27 +25,24 @@ public class Importer{
     private String targetNodes;
     private String targetWays;
 
-    private Importer(String pathNodes, String pathWays){
-        originNodes = pathNodes;
-        originWays = pathWays;
-        File file = new File(pathNodes);
+    private Importer(){
+
+        originNodes = this.getClass().getResource("/europa1401/Node.pbf").getPath();
+        originWays = this.getClass().getResource("/europa1401/Way.pbf").getPath();
+        File file = new File(originNodes);
         targetNodes = file.getParent() + "\\Filter_" + file.getName();
         System.out.println(targetNodes);
-        file = new File(pathWays);
+        file = new File(originWays);
         targetWays = file.getParent() + "\\Filter_" + file.getName();
         filter();
-        analyseFile(targetNodes,0);
-        analyseFile(targetWays,0);
+        analyseFile(targetNodes, -10);
+        analyseFile(targetWays, -10);
     }
 
-    private Importer(String pathNodes, String pathWays, String targetPathNodes , String targetPathWays ){
-        originNodes = pathNodes;
-        originWays = pathWays;
-        targetNodes = targetPathNodes;
-        targetWays = targetPathWays;
-        //filter();
-        analyseFile(this.getClass().getResource("/duesseldorf2701.pbf").getPath(), 366343169);
-        analyseFile(this.getClass().getResource("/duesseldorf2701/step1.pbf").getPath(), 366343169);
+    private Importer(String pathNodes){
+        analyseFile(this.getClass().getResource("/europa1401.pbf").getPath(), -10);
+        analyseFile(this.getClass().getResource("/europa1401/Filter_Node.pbf").getPath(), -10);
+        analyseFile(this.getClass().getResource("/europa1401/Filter_Way.pbf").getPath(), -10);
     }
 
     private void filter() {
@@ -121,7 +119,6 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        new Importer("C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Node.pbf",
-                "C:\\Users\\Uni\\Desktop\\Routenplanner\\test\\Ddorf\\Way.pbf", "","");
+        new Importer();
     }
 }
