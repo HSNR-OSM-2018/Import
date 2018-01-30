@@ -3,7 +3,6 @@ import crosby.binary.osmosis.OsmosisSerializer;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
 import java.io.*;
-import java.security.Timestamp;
 
 /*
 read node - save all nodes | map<id,(lat,lon,bool)>
