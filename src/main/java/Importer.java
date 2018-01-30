@@ -114,9 +114,20 @@ public class Importer{
         String target = origin.replace(".pbf","");
         String rfScript = this.getClass().getResource("/roughFilter.sh").getPath();
         ExecuteCommand(rfScript + " " + path + " " + target);
+
+        originNodes = target + "Node.pbf";
+        originWays = target + "Way.pbf";
+        targetNodes = target + "Filter_Nodes.pbf";
+        targetWays = target + "Filter_Ways.pbf";
+        filter();
+
+        String ffScript = this.getClass().getResource("/fineFilter.sh").getPath();
+        ExecuteCommand(ffScript + " " + targetNodes);
+        ExecuteCommand(ffScript + " " + targetWays);
     }
 
     public static void main(String[] args) {
-        new Importer();
+        Importer imp = new Importer("");
+        imp.linux("");
     }
 }
