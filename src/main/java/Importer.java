@@ -39,9 +39,6 @@ public class Importer{
     }
 
     private Importer(String pathNodes){
-        analyseFile(this.getClass().getResource("/europa1401.pbf").getPath(), -10);
-        analyseFile(this.getClass().getResource("/europa1401/Filter_Node.pbf").getPath(), -10);
-        analyseFile(this.getClass().getResource("/europa1401/Filter_Way.pbf").getPath(), -10);
     }
 
     private void filter() {
