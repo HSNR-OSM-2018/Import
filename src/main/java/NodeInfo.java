@@ -1,12 +1,12 @@
 public class NodeInfo {
 
-    private double _lat;
-    private double _lon;
+    private float _lat;
+    private float _lon;
     private boolean _marked;
 
     public NodeInfo(double lat, double lon){
-        _lat = lat;
-        _lon = lon;
+        _lat = (float) lat;
+        _lon = (float) lon;
         _marked = false;
     }
 

@@ -3,6 +3,7 @@ import crosby.binary.osmosis.OsmosisSerializer;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 /*
 read node - save all nodes | map<id,(lat,lon,bool)>
@@ -19,15 +20,16 @@ tags: highway=same maxspeed=km/h length=meter onway=yes/no/-1
 
 public class Importer{
 
+    private static Logger logger = Logger.getLogger(Importer.class.getSimpleName());
+
     private String originNodes;
     private String originWays;
     private String targetNodes;
     private String targetWays;
 
     private Importer(){
-
-        originNodes = this.getClass().getResource("/europa1401/Node.pbf").getPath();
-        originWays = this.getClass().getResource("/europa1401/Way.pbf").getPath();
+        originNodes = this.getClass().getResource("/germany2801/Node.pbf").getPath();
+        originWays = this.getClass().getResource("/germany2801/Way.pbf").getPath();
         File file = new File(originNodes);
         targetNodes = file.getParent() + "\\Filter_" + file.getName();
         System.out.println(targetNodes);
@@ -39,6 +41,7 @@ public class Importer{
     }
 
     private Importer(String pathNodes){
+        analyseFile(this.getClass().getResource("/germany2801/All.pbf").getPath(), -1);
     }
 
     private void filter() {
@@ -50,22 +53,29 @@ public class Importer{
             OsmosisReader reader = new OsmosisReader(inputStream);
             reader.setSink(nodeMarker);
             reader.run();
+            logger.info("Read nodes done");
+            System.gc();
 
             inputStream = new FileInputStream(originWays);
             reader = new OsmosisReader(inputStream);
             reader.setSink(nodeMarker);
             reader.run();
+            logger.info("Read ways, mark nodes done");
+            System.gc();
 
             OutputStream outputStream = new FileOutputStream(targetNodes);
             writer.setSink(new OsmosisSerializer(new BlockOutputStream(outputStream)));
             writer.writeNodes(nodeMarker.getNodesMap());
             writer.complete();
+            logger.info("Write nodes done");
+            System.gc();
 
             WayReader wayReader = new WayReader(nodeMarker.getNodesMap(), targetWays);
             inputStream = new FileInputStream(originWays);
             reader = new OsmosisReader(inputStream);
             reader.setSink(wayReader);
             reader.run();
+            logger.info("Write ways done");
         } catch (FileNotFoundException ex){
             ex.printStackTrace();
         }
@@ -125,6 +135,6 @@ public class Importer{
 
     public static void main(String[] args) {
         Importer imp = new Importer("");
-        imp.linux("");
+        //imp.linux("");
     }
 }
