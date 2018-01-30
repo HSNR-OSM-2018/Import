@@ -1,3 +1,5 @@
+import de.hsnr.osm2018.data.graph.Node;
+
 public class NodeInfo {
 
     private float _lat;
@@ -27,10 +29,6 @@ public class NodeInfo {
     }
 
     public int distToNode(NodeInfo node){
-        double dist = 0;
-        double lat = 111.3*(this._lat - node.Lat());
-        double lon = 71.5*(this._lon - node.Lon());
-        dist = Math.sqrt(lat*lat+lon*lon);
-        return (int)(dist*1000);
+        return (int)Node.getDistance(this._lat, this._lon, node._lat, node._lon);
     }
 }

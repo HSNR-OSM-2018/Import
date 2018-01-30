@@ -66,7 +66,7 @@ public class WayReader implements Sink{
             tags.add(new Tag("oneway",oneway));
             WayNode startNode = new WayNode(way.getWayNodes().get(0).getNodeId());
             WayNode endNode = new WayNode(way.getWayNodes().get(way.getWayNodes().size()-1).getNodeId());
-            for(int i=1;i<way.getWayNodes().size()-1;i++){
+            for(int i=1;i<way.getWayNodes().size();i++){
                 length += _nodeMap.get(way.getWayNodes().get(i-1).getNodeId()).distToNode(_nodeMap.get(way.getWayNodes().get(i).getNodeId()));
                 if(_nodeMap.get(way.getWayNodes().get(i).getNodeId()).isMarked()){
                     List<WayNode> wayNodes = new ArrayList<>();
