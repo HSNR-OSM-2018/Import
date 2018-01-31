@@ -41,7 +41,7 @@ public class Importer{
     }
 
     private Importer(String pathNodes){
-        analyseFile(this.getClass().getResource("/germany2801/All.pbf").getPath(), -1);
+        analyseFile("C:\\Users\\Uni\\Desktop\\Routenplanner\\All.pbf", -10);
     }
 
     private void filter() {
@@ -134,7 +134,7 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        Importer imp = new Importer("");
+        Importer imp = new Importer();
         //imp.linux("");
     }
 }

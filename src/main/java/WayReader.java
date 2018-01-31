@@ -65,7 +65,6 @@ public class WayReader implements Sink{
             tags.add(new Tag("maxspeed", String.valueOf(maxSpeed)));
             tags.add(new Tag("oneway",oneway));
             WayNode startNode = new WayNode(way.getWayNodes().get(0).getNodeId());
-            WayNode endNode = new WayNode(way.getWayNodes().get(way.getWayNodes().size()-1).getNodeId());
             for(int i=1;i<way.getWayNodes().size();i++){
                 length += _nodeMap.get(way.getWayNodes().get(i-1).getNodeId()).distToNode(_nodeMap.get(way.getWayNodes().get(i).getNodeId()));
                 if(_nodeMap.get(way.getWayNodes().get(i).getNodeId()).isMarked()){
@@ -80,11 +79,6 @@ public class WayReader implements Sink{
                     length = 0;
                 }
             }
-            tags.add(new Tag("length", String.valueOf(length)));
-            List<WayNode> wayNodes = new ArrayList<>();
-            wayNodes.add(startNode);
-            wayNodes.add(endNode);
-            _writer.writeWay(way.getId(),tags,wayNodes);
         }
     }
 
@@ -97,10 +91,12 @@ public class WayReader implements Sink{
                 speed = 8;
             } else if (tag.endsWith("mph")) {
                 speed = saveParseString(tag.replace("mph", ""));
+                speed *= 1.609344;
             } else if(tag.endsWith("kmh")){
                 speed = saveParseString(tag.replace("kmh",""));
             } else if(tag.endsWith("knots")){
                 speed = saveParseString(tag.replace("knots",""));
+                speed *= 1.851999999984;
             }
         }
         return speed;
@@ -123,16 +119,16 @@ public class WayReader implements Sink{
                 return 100;
 
             case "primary":
-                return 100;
+                return 60;
 
             case "secondary":
-                return 50;
+                return 60;
 
             case "tertiary":
-                return 30;
+                return 60;
 
             case "living_street":
-                return 30;
+                return 15;
 
             case "residential":
                 return 30;
@@ -143,11 +139,10 @@ public class WayReader implements Sink{
             case "service":
                 return 30;
 
-            case "road":
-                return 30;
+            default:
+                return 60;
 
         }
-        return 1;
     }
 
     public void initialize(Map<String, Object> map) {
