@@ -7,7 +7,6 @@ osmfilter ./output456.osm --drop-nodes -o=./outputWay123.osm
 filter='All.pbf'
 node='Node.pbf'
 way='Way.pbf'
-touch $2$filter
 osmconvert ./output456.osm -o=$2$filter
 osmconvert ./outputNode123.osm -o=$2$node
 osmconvert ./outputWay123.osm -o=$2$way
