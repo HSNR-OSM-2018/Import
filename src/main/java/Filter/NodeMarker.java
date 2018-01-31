@@ -1,3 +1,5 @@
+package Filter;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +45,7 @@ public class NodeMarker implements Sink{
     }
 
     public void release() {
+        System.out.println("Map länge: " + _nodes.size());
     }
 
     public Map<Long, NodeInfo> getNodesMap(){

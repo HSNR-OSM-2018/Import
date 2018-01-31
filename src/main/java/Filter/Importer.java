@@ -1,3 +1,5 @@
+package Filter;
+
 import crosby.binary.osmosis.OsmosisReader;
 import crosby.binary.osmosis.OsmosisSerializer;
 import org.openstreetmap.osmosis.osmbinary.file.BlockOutputStream;
@@ -54,25 +56,26 @@ public class Importer{
             reader.setSink(nodeMarker);
             reader.run();
             logger.info("Read nodes done");
-            System.gc();
 
             inputStream = new FileInputStream(originWays);
             reader = new OsmosisReader(inputStream);
+            System.gc();
             reader.setSink(nodeMarker);
             reader.run();
             logger.info("Read ways, mark nodes done");
-            System.gc();
 
             OutputStream outputStream = new FileOutputStream(targetNodes);
             writer.setSink(new OsmosisSerializer(new BlockOutputStream(outputStream)));
             writer.writeNodes(nodeMarker.getNodesMap());
             writer.complete();
             logger.info("Write nodes done");
+            writer = null;
             System.gc();
 
             WayReader wayReader = new WayReader(nodeMarker.getNodesMap(), targetWays);
             inputStream = new FileInputStream(originWays);
             reader = new OsmosisReader(inputStream);
+            System.gc();
             reader.setSink(wayReader);
             reader.run();
             logger.info("Write ways done");

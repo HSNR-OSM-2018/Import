@@ -1,3 +1,5 @@
+package Filter;
+
 public class NodeInfo {
 
     private float _lat;
