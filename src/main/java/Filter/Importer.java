@@ -30,20 +30,18 @@ public class Importer{
     private String targetWays;
 
     private Importer(){
-        originNodes = this.getClass().getResource("/germany2801/Node.pbf").getPath();
-        originWays = this.getClass().getResource("/germany2801/Way.pbf").getPath();
+        originNodes = "C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\Node.pbf";
+        originWays = "C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\Node.pbf";
         File file = new File(originNodes);
         targetNodes = file.getParent() + "\\Filter_" + file.getName();
         System.out.println(targetNodes);
         file = new File(originWays);
         targetWays = file.getParent() + "\\Filter_" + file.getName();
         filter();
-        analyseFile(targetNodes, -10);
-        analyseFile(targetWays, -10);
     }
 
     private Importer(String pathNodes){
-        analyseFile("C:\\Users\\Uni\\Desktop\\Routenplanner\\All.pbf", -10);
+        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf",-1065841);
     }
 
     private void filter() {
@@ -84,7 +82,7 @@ public class Importer{
         }
     }
 
-    private void analyseFile(String path, long searchNumber){
+    public void analyseFile(String path, long searchNumber){
         try{
             InputStream inputStream = new FileInputStream(path);
             OsmosisReader reader = new OsmosisReader(inputStream);
@@ -137,7 +135,7 @@ public class Importer{
     }
 
     public static void main(String[] args) {
-        Importer imp = new Importer();
+        Importer imp = new Importer("");
         //imp.linux("");
     }
 }
