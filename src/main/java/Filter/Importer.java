@@ -20,7 +20,9 @@ tags: highway=same maxspeed=km/h length=meter onway=yes/no/-1
 
  */
 
-public class Importer{
+public class Importer {
+
+    public static final boolean STATS = false;
 
     private static Logger logger = Logger.getLogger(Importer.class.getSimpleName());
 
@@ -29,9 +31,9 @@ public class Importer{
     private String targetNodes;
     private String targetWays;
 
-    private Importer(){
-        originNodes = "C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\Node.pbf";
-        originWays = "C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\Node.pbf";
+    private Importer() {
+        originNodes = this.getClass().getResource("/germany2801/Node.pbf").getPath();
+        originWays = this.getClass().getResource("/germany2801/Way.pbf").getPath();
         File file = new File(originNodes);
         targetNodes = file.getParent() + "\\Filter_" + file.getName();
         System.out.println(targetNodes);
@@ -40,8 +42,23 @@ public class Importer{
         filter();
     }
 
-    private Importer(String pathNodes){
-        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf",-1065841);
+    private Importer(String originNodes, String originWays) {
+        this.originNodes = originNodes;
+        this.originWays = originWays;
+        System.out.println("nodes file: " + originNodes);
+        System.out.println("ways file: " + originWays);
+        File file = new File(originNodes);
+        targetNodes = file.getParent() + "\\Filter_" + file.getName();
+        System.out.println(targetNodes);
+        file = new File(originWays);
+        targetWays = file.getParent() + "\\Filter_" + file.getName();
+        filter();
+        analyseFile(targetNodes, -10);
+        analyseFile(targetWays, -10);
+    }
+
+    private Importer(String pathNodes) {
+        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf", -1065841);
     }
 
     private void filter() {
@@ -77,13 +94,13 @@ public class Importer{
             reader.setSink(wayReader);
             reader.run();
             logger.info("Write ways done");
-        } catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
-    public void analyseFile(String path, long searchNumber){
-        try{
+    public void analyseFile(String path, long searchNumber) {
+        try {
             InputStream inputStream = new FileInputStream(path);
             OsmosisReader reader = new OsmosisReader(inputStream);
             System.out.println("---------------");
@@ -91,35 +108,35 @@ public class Importer{
             reader.setSink(new Analyzer(searchNumber));
             reader.run();
             System.out.println("---------------");
-        } catch (FileNotFoundException ex){
+        } catch (FileNotFoundException ex) {
             ex.printStackTrace();
         }
     }
 
-    private String ExecuteCommand(String command){
+    private String ExecuteCommand(String command) {
         StringBuffer output = new StringBuffer();
 
         Process p;
-        try{
+        try {
 
             p = Runtime.getRuntime().exec(command);
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = "";
-            while((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 output.append(line + "\n");
             }
 
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return output.toString();
     }
 
-    public void linux(String path){
+    public void linux(String path) {
         String origin = path;
-        String target = origin.replace(".pbf","");
+        String target = origin.replace(".pbf", "");
         String rfScript = this.getClass().getResource("/roughFilter.sh").getPath();
         ExecuteCommand(rfScript + " " + path + " " + target);
 
@@ -135,6 +152,10 @@ public class Importer{
     }
 
     public static void main(String[] args) {
+        if (args.length >= 2) {
+            String dir = System.getProperty("user.dir") + "/";
+            Importer imp = new Importer(dir + args[0], dir + args[1]);
+        }
         Importer imp = new Importer("");
         //imp.linux("");
     }
