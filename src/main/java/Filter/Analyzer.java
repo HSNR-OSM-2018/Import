@@ -25,7 +25,6 @@ public class Analyzer implements Sink{
     private int unknownC = 0;
 
     private long search;
-    private long highId;
 
     public Analyzer(long searchNumber){
         search = searchNumber;
@@ -39,9 +38,6 @@ public class Analyzer implements Sink{
         if(entityContainer instanceof NodeContainer){
 
             Node node = ((NodeContainer) entityContainer).getEntity();
-
-            if(node.getId() > highId)
-                highId = node.getId();
 
             nodeC++;
             nTagC += node.getTags().size();
@@ -139,8 +135,6 @@ public class Analyzer implements Sink{
         if(lengthC>1)System.out.println("Length: " + lengthC);
         if(length>1)System.out.println("Length in Meter: " + length);
         if(lparseError>1)System.out.println("Length parse Error: " + lparseError);
-
-        System.out.println("\nHighest ID: " + highId);
     }
 
     public void release() {
