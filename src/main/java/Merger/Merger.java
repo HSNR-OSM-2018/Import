@@ -55,6 +55,6 @@ public class Merger {
 
     public static void main(String[] args) {
         Merger merger = new Merger();
-        merger.Egg("C:\\Users\\Assares\\Desktop\\OSM\\germany2801\\Filter_Way.pbf");
+        merger.Egg("C:\\Users\\Uni\\Desktop\\Routenplanner\\Final\\Europa_Way.pbf");
     }
 }
