@@ -22,7 +22,7 @@ tags: highway=same maxspeed=km/h length=meter onway=yes/no/-1
 
 public class Importer {
 
-    public static final boolean STATS = false;
+    public static final boolean STATS = true;
 
     private static Logger logger = Logger.getLogger(Importer.class.getSimpleName());
 
@@ -48,17 +48,17 @@ public class Importer {
         System.out.println("nodes file: " + originNodes);
         System.out.println("ways file: " + originWays);
         File file = new File(originNodes);
-        targetNodes = file.getParent() + "\\Filter_" + file.getName();
+        targetNodes = file.getParent() + "/Filter_" + file.getName();
         System.out.println(targetNodes);
         file = new File(originWays);
-        targetWays = file.getParent() + "\\Filter_" + file.getName();
+        targetWays = file.getParent() + "/Filter_" + file.getName();
         filter();
         analyseFile(targetNodes, -10);
         analyseFile(targetWays, -10);
     }
 
     private Importer(String pathNodes) {
-        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf", -1065841);
+
     }
 
     private void filter() {
@@ -113,32 +113,27 @@ public class Importer {
         }
     }
 
-    private String ExecuteCommand(String command) {
-        StringBuffer output = new StringBuffer();
-
-        Process p;
+    private String executeCommand(String command) {
+        StringBuilder output = new StringBuilder();
         try {
-
-            p = Runtime.getRuntime().exec(command);
+            Process p = Runtime.getRuntime().exec(command);
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = "";
             while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                output.append(line).append("\n");
             }
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         return output.toString();
     }
 
     public void linux(String path) {
         String origin = path;
         String target = origin.replace(".pbf", "");
-        String rfScript = this.getClass().getResource("/roughFilter.sh").getPath();
-        ExecuteCommand(rfScript + " " + path + " " + target);
+        String rfScript = new File(System.getProperty("user.dir") + "/roughFilter.sh").getPath();
+        System.out.println(executeCommand(rfScript + " " + path + " " + target));
 
         originNodes = target + "Node.pbf";
         originWays = target + "Way.pbf";
@@ -146,17 +141,22 @@ public class Importer {
         targetWays = target + "Filter_Ways.pbf";
         filter();
 
-        String ffScript = this.getClass().getResource("/fineFilter.sh").getPath();
-        ExecuteCommand(ffScript + " " + targetNodes);
-        ExecuteCommand(ffScript + " " + targetWays);
+        String ffScript = new File(System.getProperty("user.dir") + "/fineFilter.sh").getPath();
+        System.out.println(executeCommand(ffScript + " " + targetNodes));
+        System.out.println(executeCommand(ffScript + " " + targetWays));
     }
 
     public static void main(String[] args) {
         if (args.length >= 2) {
             String dir = System.getProperty("user.dir") + "/";
             Importer imp = new Importer(dir + args[0], dir + args[1]);
+            return;
         }
-        Importer imp = new Importer("");
-        //imp.linux("");
+        if (args.length == 1) {
+            Importer imp = new Importer("");
+            imp.linux(System.getProperty("user.dir") + "/" + args[0]);
+            return;
+        }
+        logger.info("At least one parameter is required");
     }
 }
