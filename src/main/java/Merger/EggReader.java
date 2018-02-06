@@ -146,7 +146,6 @@ public class EggReader implements Sink {
         _bielefeld.add(258224867l);
         _bielefeld.add(24150384l);
         _bielefeld.add(163060998l);
-        _bielefeld.add(34374159l);
         _bielefeld.add(27874534l);
         _bielefeld.add(215840518l);
         _bielefeld.add(145488365l);
@@ -172,5 +171,43 @@ public class EggReader implements Sink {
         _bielefeld.add(28944720l);
         _bielefeld.add(62085317l);
         _bielefeld.add(189128388l);
+        _bielefeld.add(53040567l);
+        _bielefeld.add(189002408l);
+        _bielefeld.add(154937639l);
+        _bielefeld.add(189128396l);
+        _bielefeld.add(263150899l);
+        //-----------------------------------
+        _bielefeld.add(323261644l);
+        _bielefeld.add(32735754l);
+        _bielefeld.add(32735753l);
+        _bielefeld.add(323261645l);
+        _bielefeld.add(246051220l);
+        _bielefeld.add(246051221l);
+        _bielefeld.add(293724615l);
+        _bielefeld.add(293720224l);
+        _bielefeld.add(293724617l);
+        _bielefeld.add(27161404l);
+        _bielefeld.add(293724614l);
+        _bielefeld.add(293724607l);
+        _bielefeld.add(275857459l);
+        _bielefeld.add(4473456l);
+        _bielefeld.add(48837255l);
+        _bielefeld.add(119260620l);
+        _bielefeld.add(267133905l);
+        _bielefeld.add(170079432l);
+        _bielefeld.add(322768191l);
+        _bielefeld.add(322768191l);
+        _bielefeld.add(267133904l);
+        _bielefeld.add(114423555l);
+        _bielefeld.add(396680866l);
+        _bielefeld.add(41430076l);
+        _bielefeld.add(497239313l);
+        _bielefeld.add(285804777l);
+        _bielefeld.add(175936306l);
+        _bielefeld.add(28937405l);
+        _bielefeld.add(177080695l);
+        _bielefeld.add(36830273l);
+        _bielefeld.add(383302691l);
+        _bielefeld.add(216863369l);
     }
 }
