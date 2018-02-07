@@ -51,6 +51,8 @@ public class Analyzer implements Sink{
             boolean found = false;
             Way way = ((WayContainer) entityContainer).getEntity();
             wayC++;
+            if(way.getId() == search)
+                found = true;
             for(Tag tag : way.getTags()){
                 wTagC++;
                 if(tag.getValue().equals(String.valueOf(search)))

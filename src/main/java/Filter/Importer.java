@@ -58,7 +58,7 @@ public class Importer {
     }
 
     private Importer(String pathNodes) {
-
+        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf", -1065841);
     }
 
     private void filter() {
@@ -144,6 +144,17 @@ public class Importer {
         String ffScript = new File(System.getProperty("user.dir") + "/fineFilter.sh").getPath();
         System.out.println(executeCommand(ffScript + " " + targetNodes));
         System.out.println(executeCommand(ffScript + " " + targetWays));
+    }
+
+    public void windows(String nodePath, String wayPath){
+        originNodes = nodePath;
+        originWays = wayPath;
+        File file = new File(originNodes);
+        targetNodes = file.getParent() + "/Filter_" + file.getName();
+        System.out.println(targetNodes);
+        file = new File(originWays);
+        targetWays = file.getParent() + "/Filter_" + file.getName();
+        filter();
     }
 
     public static void main(String[] args) {
