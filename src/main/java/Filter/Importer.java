@@ -58,7 +58,7 @@ public class Importer {
     }
 
     private Importer(String pathNodes) {
-        analyseFile("C:\\Users\\Assares\\Desktop\\OSM\\europa1401\\All.pbf", -1065841);
+        analyseFile(pathNodes, -1065841);
     }
 
     private void filter() {
