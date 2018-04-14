@@ -144,6 +144,9 @@ public class Importer {
         String ffScript = new File(System.getProperty("user.dir") + "/fineFilter.sh").getPath();
         System.out.println(executeCommand(ffScript + " " + targetNodes));
         System.out.println(executeCommand(ffScript + " " + targetWays));
+        executeCommand("rm " + target + "All.pbf");
+        executeCommand("rm " + originNodes);
+        executeCommand("rm " + originWays);
     }
 
     public void windows(String nodePath, String wayPath){
